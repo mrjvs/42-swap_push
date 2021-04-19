@@ -1,6 +1,6 @@
 # 42-swap_push
 
-Some algorithm stuff, made for fun.
+Some algorithm stuff, made for fun (because who doesnt love coding & algorithm).
 Its split up into two parts: checker and push_swap
 
 ## checker
