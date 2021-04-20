@@ -26,8 +26,16 @@ INC_DIR			= src/_includes
 
 SRC	=\
 	main.c\
+	instructions.c\
+	utils.c\
+	stack/stack.c\
+	stack/pop.c\
+	stack/push.c
 
 HEADERS	=\
+	stack.h\
+	instructions.h\
+	utils.h
 
 # Fix sources and headers
 OBJ				= $(patsubst %,%.o,$(SRC))
