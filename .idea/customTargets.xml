@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CLionExternalBuildManager">
+    <target id="c5352fe3-34df-40ed-9161-8940ca5ded3d" name="Checker" defaultType="MAKE">
+      <configuration id="b493e38b-6532-485d-85f3-f13d0b49c88f" name="Checker">
+        <build type="MAKE">
+          <make targetName="checker" />
+        </build>
+        <clean type="MAKE">
+          <make targetName="clean" />
+        </clean>
+      </configuration>
+    </target>
+    <target id="09dcf476-84ed-4d0d-b7b0-3e8b3e3a77b8" name="push_swap" defaultType="MAKE">
+      <configuration id="8c5f6d3c-6f9e-4fb2-a1b2-f9f5a055d5b9" name="push_swap" />
+    </target>
+  </component>
+</project>

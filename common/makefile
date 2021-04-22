@@ -1,36 +1,31 @@
 # Constants
-NAME			= checker
+NAME			= push_swap_lib.a
 NAME			:= $(addprefix ./build/,$(NAME))
 
 # Compiler
 CC				= clang
 
 CC_FLAGS		= -Wall -Werror -Wextra -std=c99 -pedantic-errors
-DEBUG_FLAGS		=
 BUILD_FLAGS		= -O3 -pthread
-
-ifdef BUILD_DEBUG
-DEBUG_FLAGS		= -g -fsanitize=address
-BUILD_FLAGS		= -pthread
-endif
-ifdef BUILD_LEAK
-DEBUG_FLAGS		= -g -fsanitize=leak
-BUILD_FLAGS		= -pthread
-endif
 
 # Files
 SRC_DIR			= src
 BUILD_DIR		= build
 OUT_DIR			= build/out
 INC_DIR			= src/_includes
-INC_LIB_DIR		= ../common/headers
 
 SRC	=\
-	main.c\
-
-LIBS = ../common/build/push_swap_lib.a
+	instructions.c\
+	utils.c\
+	stack/stack.c\
+	stack/pop.c\
+	stack/push.c\
+	stack/node.c
 
 HEADERS	=\
+	stack.h\
+	instructions.h\
+	utils.h
 
 # Fix sources and headers
 OBJ				= $(patsubst %,%.o,$(SRC))
@@ -53,14 +48,12 @@ deps:
 
 $(NAME): $(addprefix $(OUT_DIR)/,$(OBJ))
 	@echo "$(PREFIX)$(GREEN) Bundling objects...$(END)"
-	@$(MAKE) --no-print -C ../common all
-	@echo "BUILD $(NAME) $(CC_FLAGS) $(DEBUG_FLAGS) $(BUILD_FLAGS) -I$(INC_DIR) -I$(INC_LIB_DIR)"
-	@$(CC) $(CC_FLAGS) $(DEBUG_FLAGS) $(BUILD_FLAGS) -I$(INC_DIR) -I$(INC_LIB_DIR) -o $@ $(addprefix $(OUT_DIR)/,$(OBJ)) $(LIBS)
+	ar rcs $@ $(addprefix $(OUT_DIR)/,$(OBJ))
 
 $(OUT_DIR)/%.c.o: $(SRC_DIR)/%.c $(HEADERS)
 	@echo "$(PREFIX)$(GREEN) Compiling file $(END)$(notdir $<) $(GREEN)to $(END)$(notdir $@)"
 	@mkdir -p $(dir $@)
-	@$(CC) $(CC_FLAGS) $(DEBUG_FLAGS) -I$(INC_DIR) -I$(INC_LIB_DIR) -o $@ -c $<
+	@$(CC) $(CC_FLAGS) $(DEBUG_FLAGS) -I$(INC_DIR) -o $@ -c $<
 
 clean:
 	@echo "$(PREFIX)$(GREEN) Removing directory $(END)$(OUT_DIR)"
@@ -73,17 +66,3 @@ fclean: clean
 re:
 	$(MAKE) fclean
 	$(MAKE) all
-
-debug:
-	$(MAKE) BUILD_DEBUG=1 all
-
-rdebug:
-	$(MAKE) fclean
-	$(MAKE) debug
-
-leak:
-	$(MAKE) BUILD_LEAK=1 all
-
-rleak:
-	$(MAKE) fclean
-	$(MAKE) leak

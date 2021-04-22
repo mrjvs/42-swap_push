@@ -2,35 +2,62 @@
 // Created by jelle on 4/19/2021.
 //
 
-#include "instructions.h"
+#include "push_swap_lib.h"
 #include <unistd.h>
 
-static int	sendError() {
-	write(STDERR_FILENO, "Error\n", 5);
-	return 1;
+static int	send_error(void)
+{
+	write(STDERR_FILENO, "Error\n", 6);
+	return (1);
 }
 
-static int	sendResult(t_stack *a, t_stack *b) {
+static int	send_result(t_stack *a, t_stack *b)
+{
 	if (stack_len(b) != 0 || !stack_is_sorted(a))
 		write(STDOUT_FILENO, "KO\n", 3);
 	else
 		write(STDOUT_FILENO, "OK\n", 3);
-	return 0;
+	return (0);
 }
 
-int main(int argc, char *argv[]) {
-	t_stack a;
-	t_stack b;
+static int	runInstructions(t_stack *a, t_stack *b)
+{
+	char	instruction[MAX_INSTRUCTION_SIZE];
+	int		i;
+
+	while (TRUE)
+	{
+		i = get_next_instr(instruction);
+		if (i < 0)
+			return (send_error());
+		if (instruction[0] == '\0' && i == 0)
+			break ;
+		if (!run_instr(instruction, a, b))
+			return (send_error());
+		if (i == 0)
+			break ;
+	}
+	return (0);
+}
+
+int	main(int argc, char *argv[])
+{
+	t_stack	a;
+	t_stack	b;
+	int		i;
 
 	stack_init(&a);
 	stack_init(&b);
-	stack_push_value(&a, 2);
-	stack_push_value(&a, 1);
-	if (argc > 1)
-		return sendError();
-	// TODO read args into stack A
-	(void)argv;
-	// TODO read instructions and run them
-	run_instr("rrr", &a, &b);
-	return sendResult(&a, &b);
+	if (argc < 2)
+		return (send_error());
+	i = 1;
+	while (i < argc)
+	{
+		if (!is_num(argv[1]) || !stack_push_value(&a, my_atoi(argv[i])))
+			return (send_error());
+		i++;
+	}
+	if (runInstructions(&a, &b) != 0)
+		return (1);
+	return (send_result(&a, &b));
 }

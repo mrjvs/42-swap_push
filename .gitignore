@@ -1,3 +1,4 @@
 *.o
 checker/build
 push_swap/build
+common/build
